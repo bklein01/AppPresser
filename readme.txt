@@ -1,18 +1,18 @@
 === AppPresser - Mobile App Framework ===
-Contributors: apppresser, webdevstudios, williamsba1, scottopolis, jtsternberg, Messenlehner, LisaSabinWilson, tw2113
+Contributors: apppresser, webdevstudios, williamsba1, scottopolis, jtsternberg, Messenlehner, LisaSabinWilson, tw2113, modemlooper
 Donate link: http://apppresser.com/
 Tags: mobile, app, ios, android, application, phonegap, iphone app, android app, mobile app, native app, wordpress mobile, ipad app, iOS app
 Requires at least: 3.5
-Tested up to: 3.9.1
-Stable tag: 1.1.3
+Tested up to: 4.2
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Build native iOS and Android mobile apps with the AppPresser framework.
+Your WordPress site in an App.
 
 == Description ==
 
-AppPresser is the first native mobile app development framework for WordPress.
+AppPresser is a mobile app development framework for WordPress.
 
 [AppPresser](http://apppresser.com/ "AppPresser mobile apps with WordPress") allows you to use a WordPress site as an app, including access to device features such as the camera, contacts, and more. You can create your app completely in WordPress, using themes, plugins, and all the stuff you already know.
 
@@ -88,6 +88,17 @@ Technically you can do anything with an AppPresser app that you can do with Phon
 
 
 == Changelog ==
+= 1.1.8 =
+* fix license activation bug
+
+= 1.1.7 =
+* add back missing front page setting
+
+= 1.1.6 =
+* fix broken customizer link
+
+= 1.1.5 =
+* security fixes
 
 = 1.1.3 =
 * Roll back script optimization to fix push notifications and other bugs

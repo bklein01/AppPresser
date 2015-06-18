@@ -70,12 +70,47 @@ class AppPresser_Theme_Switcher extends AppPresser {
 			return;
 
 		// Get the saved setting's theme object
-		$this->appp_theme = wp_get_theme( appp_get_setting( 'appp_theme' ) );
+		if (isset( $_GET['theme'] ) && $_GET['theme'] != '') {
+			$theme = $_GET['theme'];
+		} else if (isset( $_SESSION['AppPresser_Theme'] ) && $_SESSION['AppPresser_Theme'] != '') {
+			$theme = $_SESSION['AppPresser_Theme'];
+		}
+		if ($theme != '') {
+			$_SESSION['AppPresser_Theme'] = $theme;
+			$this->appp_theme = wp_get_theme( $theme );
+			add_filter( 'option_template', array( $this, 'custom_template_request' ), 5 );
+			add_filter( 'option_stylesheet', array( $this, 'custom_stylesheet_request' ), 5 );
+			add_filter( 'template', array( $this, 'use_custom_theme' ) );
+		} else {
+			$this->appp_theme = wp_get_theme( appp_get_setting( 'appp_theme' ) );
+			// switch the current theme to use the AppPresser theme
+			add_filter( 'option_template', array( $this, 'template_request' ), 5 );
+			add_filter( 'option_stylesheet', array( $this, 'stylesheet_request' ), 5 );
+			add_filter( 'template', array( $this, 'maybe_switch' ) );
+		}
 
-		// switch the current theme to use the AppPresser theme
-		add_filter( 'option_template', array( $this, 'template_request' ), 5 );
-		add_filter( 'option_stylesheet', array( $this, 'stylesheet_request' ), 5 );
-		add_filter( 'template', array( $this, 'maybe_switch' ) );
+	}
+
+	public function custom_template_request( $template ) {
+		// Cache our original template request
+		$this->original_template = null === $this->original_template ? $template : $this->original_template;
+
+		return $this->use_custom_theme( $template );
+	}
+
+	public function custom_stylesheet_request( $stylesheet ) {
+		// Cache our original stylesheet request
+		$this->original_stylesheet = null === $this->original_stylesheet ? $stylesheet : $this->original_stylesheet;
+
+		return $this->use_custom_theme( $stylesheet, true );
+	}
+
+	public function use_custom_theme( $template = '', $stylesheet_request = false ) {
+		// Ok, do the template switch
+		$template = $this->appp_theme->get_template();
+
+		// return the switched template
+		return $template;
 	}
 
 	/**
@@ -158,6 +193,10 @@ class AppPresser_Theme_Switcher extends AppPresser {
 	 * @return mixed 'page' if APPP theme is running or false
 	 */
 	public function pre_show_on_front() {
+
+		if( !appp_get_setting( 'appp_home_page' ) ) {
+			return false;
+		}
 
 		$this->theme = wp_get_theme();
 		if ( $this->theme->template == $this->maybe_switch() && ! is_admin() ) {
